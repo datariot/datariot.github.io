@@ -1,0 +1,46 @@
+---
+const themes = [
+  { id: 'garden',   label: 'Garden' },
+  { id: 'workshop', label: 'Workshop' },
+  { id: 'atelier',  label: 'Atelier' },
+  { id: 'riso',     label: 'Riso' },
+];
+---
+
+<div class="theme-switcher" role="group" aria-label="Color palette">
+  <span class="theme-switcher__label">Palette</span>
+  {themes.map((t) => (
+    <button class="theme-switcher__btn" type="button" data-theme={t.id} aria-pressed="false">
+      <span class="swatch" aria-hidden="true"></span>
+      <span class="label-text">{t.label}</span>
+    </button>
+  ))}
+</div>
+
+<script is:inline>
+  (() => {
+    const html = document.documentElement;
+    const buttons = document.querySelectorAll('.theme-switcher__btn');
+
+    const sync = () => {
+      const current = html.getAttribute('data-theme');
+      buttons.forEach((b) => {
+        const active = b.getAttribute('data-theme') === current;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    sync();
+
+    buttons.forEach((b) => {
+      b.addEventListener('click', () => {
+        const theme = b.getAttribute('data-theme');
+        if (!theme) return;
+        html.setAttribute('data-theme', theme);
+        try { localStorage.setItem('datariot-theme', theme); } catch {}
+        sync();
+      });
+    });
+  })();
+</script>

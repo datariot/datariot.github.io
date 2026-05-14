@@ -1,0 +1,57 @@
+---
+import { projects } from '../data/projects';
+
+const baseDelay = 200;
+const step = 80;
+---
+
+<section id="projects" aria-labelledby="projects-title">
+  <div class="section-head">
+    <h2 id="projects-title" class="section-head__title">
+      Projects
+      <span class="count">{projects.length}</span>
+    </h2>
+    <span class="section-head__note">Selected · 2024–2026</span>
+  </div>
+
+  <div class="projects-grid">
+    {projects.map((p, i) => {
+      const isLinked = Boolean(p.link);
+      const statusClass = `status-pill status-pill--${p.status.toLowerCase()}`;
+      const delay = baseDelay + i * step;
+
+      return (
+        <article
+          class={`card reveal${isLinked ? ' is-linked' : ''}`}
+          style={`--reveal-delay: ${delay}ms;`}
+        >
+          {isLinked && (
+            <a
+              class="card__overlay"
+              href={p.link}
+              rel="noopener"
+              aria-label={`${p.name} on GitHub`}
+            ></a>
+          )}
+
+          <div class="card__head">
+            <span class="card__no">№ {p.number} · {p.year}</span>
+            {isLinked && <span class="card__arrow" aria-hidden="true">↗</span>}
+          </div>
+
+          <h3 class="card__name">{p.name}</h3>
+
+          <p class="card__pitch">{p.pitch}</p>
+
+          <div class="card__foot">
+            <div class="card__tags">
+              <span class="tag">{p.stack}</span>
+              {p.linkLabel && <span class="tag" style="background: transparent; padding-left: 0;">{p.linkLabel}</span>}
+            </div>
+            <span class={statusClass}>{p.status}</span>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+</section>
